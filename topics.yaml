@@ -1,0 +1,47 @@
+# Topic queue — human-edited only (from the GitHub mobile app or anywhere).
+# The pipeline never rewrites this file; processing status lives in
+# state/queue_state.json. Add ~30 topics per month.
+#
+# Fields: id (kebab-case, unique), title (Arabic), angle (the surprising hook),
+#         notes (optional extra guidance for the script agent).
+
+topics:
+  - id: js-event-loop
+    title: "إزاي الـ Event Loop بيشتغل في JavaScript؟"
+    angle: "ليه setTimeout بصفر مللي ثانية مش بينفذ فورًا — Microtasks قبل Macrotasks"
+
+  - id: async-await-loop-mistake
+    title: "أشهر غلطة في async/await بتبطّئ كودك 10x"
+    angle: "await جوه for loop بينفذ بالتتابع — الحل Promise.all"
+
+  - id: jwt-explained
+    title: "إيه هو الـ JWT وليه شكله كده؟"
+    angle: "التوكن مش مشفر! فك أي JWT وشوف اللي جواه — الفرق بين encoding و signing"
+
+  - id: sql-injection
+    title: "اختراق قاعدة بياناتك بسطر واحد: SQL Injection"
+    angle: "ليه string concatenation في الاستعلامات كارثة — Prepared Statements هي الحل"
+
+  - id: http-status-codes
+    title: "200 مش دايمًا معناها نجاح"
+    angle: "أكواد HTTP اللي بيغلط فيها الباك إند: 401 vs 403، و201 و204 المنسيين"
+
+  - id: env-secrets
+    title: "ليه عمرك ما تحط API Key جوه الكود"
+    angle: "من .env المحلي لـ GitHub Secrets — وإزاي تتصرف لو التوكن اترفع بالغلط"
+
+  - id: nestjs-guards
+    title: "حماية الراوتات في NestJS بسطرين"
+    angle: "Guards و canActivate — فين بيتنفذوا في دورة حياة الريكوست"
+
+  - id: oauth-vs-jwt
+    title: "الفرق الحقيقي بين OAuth و JWT"
+    angle: "واحد بروتوكول تفويض والتاني فورمات توكن — مش بدايل لبعض أصلًا"
+
+  - id: nodejs-single-thread
+    title: "سيرفر Node.js بتاعك بيستخدم كور واحد بس!"
+    angle: "الـ event loop على thread واحد — cluster module بيضاعف الأداء"
+
+  - id: ts-any-vs-unknown
+    title: "بطّل تستخدم any في TypeScript"
+    angle: "unknown بيديك نفس المرونة من غير ما تقتل الـ type safety"

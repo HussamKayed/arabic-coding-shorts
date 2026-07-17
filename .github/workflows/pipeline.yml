@@ -1,0 +1,68 @@
+name: pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: "Ad-hoc topic (leave empty to use the next queued topic from topics.yaml)"
+        required: false
+        type: string
+      until:
+        description: "Run the pipeline up to this stage"
+        required: false
+        type: choice
+        default: tts
+        options:
+          - script
+          - tts
+          - render
+          - assemble
+          - upload
+  # Enable once render/assemble/upload land (Phase 1, weekend 2).
+  # Then: change UNTIL default to upload, add --mark-state, and bump
+  # permissions to contents: write so queue state can be committed back.
+  # schedule:
+  #   - cron: "0 7 * * *"  # daily ~10:00 Cairo (UTC+3)
+
+concurrency:
+  group: pipeline
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  produce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run pipeline
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TOPIC_INPUT: ${{ inputs.topic }}
+          UNTIL_INPUT: ${{ inputs.until }}
+        run: |
+          args=(--until "${UNTIL_INPUT:-tts}")
+          if [ -n "$TOPIC_INPUT" ]; then
+            args+=(--topic "$TOPIC_INPUT")
+          fi
+          python -m pipeline.run "${args[@]}"
+
+      - name: Upload build artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-build-${{ github.run_number }}
+          path: out/
+          retention-days: 7
+          if-no-files-found: warn

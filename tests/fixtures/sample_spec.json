@@ -1,0 +1,88 @@
+{
+  "spec_version": "1.0",
+  "topic_id": "js-event-loop",
+  "language": "ar",
+  "video": {
+    "format": "short",
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "target_duration_s": 62
+  },
+  "voice": {
+    "voice_id": "ar-EG-ShakirNeural",
+    "rate": "+8%",
+    "pitch": "+0Hz"
+  },
+  "metadata": {
+    "title": "ليه setTimeout(0) مش بينفذ فورًا في JavaScript؟ 🤯",
+    "description": "هل تعلم أن setTimeout بصفر مللي ثانية لا ينفذ فورًا؟ في هذا الفيديو نشرح الـ Event Loop والفرق بين الـ Microtasks والـ Macrotasks في JavaScript بطريقة مبسطة.\n\n🔔 تابعنا لمزيد من شروحات الباك إند بالعربي\n\n⚠️ تم إنتاج هذا الفيديو بمساعدة أدوات الذكاء الاصطناعي، والمحتوى مُراجع.\n\n#Shorts #برمجة #جافاسكريبت #JavaScript",
+    "tags": [
+      "JavaScript",
+      "Event Loop",
+      "برمجة",
+      "تعلم البرمجة",
+      "باك اند",
+      "setTimeout",
+      "Promise",
+      "شرح جافاسكريبت"
+    ],
+    "category_id": "28",
+    "ai_disclosure": true,
+    "privacy_status": "private",
+    "default_language": "ar"
+  },
+  "scenes": [
+    {
+      "id": "s1",
+      "type": "hook",
+      "vo_text": "فاكر إن setTimeout بصفر مللي ثانية بينفذ الكود فورًا؟ في حاجة مستخبية جوه JavaScript هتغير فهمك.",
+      "on_screen_text": "setTimeout(0) مش فوري! 🤯",
+      "target_duration_s": 7,
+      "transition_out": "slide"
+    },
+    {
+      "id": "s2",
+      "type": "code",
+      "vo_text": "بص على الكود ده. بنطبع A، وبعدين setTimeout بصفر، وبعده Promise، وفي الآخر D. المنطقي إن B تظهر قبل C صح؟ اللي بيحصل فعلًا إن الناتج بيكون A ثم D ثم C ثم B. السبب إن JavaScript بتقسم المهام لنوعين مختلفين تمامًا في الأولوية.",
+      "code": {
+        "language": "javascript",
+        "content": "console.log(\"A\");\n\nsetTimeout(() => {\n  console.log(\"B\");\n}, 0);\n\nPromise.resolve().then(() => {\n  console.log(\"C\");\n});\n\nconsole.log(\"D\");\n// output: A, D, C, B",
+        "highlights": [
+          { "start_line": 3, "end_line": 5 },
+          { "start_line": 7, "end_line": 9 }
+        ]
+      },
+      "target_duration_s": 24,
+      "transition_out": "slide"
+    },
+    {
+      "id": "s3",
+      "type": "diagram",
+      "vo_text": "الترتيب ده سببه الـ Event Loop. الـ Microtasks زي الـ Promises ليها أولوية أعلى من الـ Macrotasks زي الـ setTimeout. يعني بعد ما الكود الرئيسي يخلص، JavaScript بتفضي طابور الـ Microtasks الأول كله، وبعدين تاخد مهمة واحدة بس من طابور الـ Macrotasks.",
+      "diagram": {
+        "nodes": [
+          { "id": "main", "label": "Main Script" },
+          { "id": "micro", "label": "Microtasks (Promises)" },
+          { "id": "macro", "label": "Macrotasks (Timers)" },
+          { "id": "stack", "label": "Call Stack" }
+        ],
+        "edges": [
+          { "from": "main", "to": "stack" },
+          { "from": "micro", "to": "stack", "label": "أولوية 1" },
+          { "from": "macro", "to": "stack", "label": "أولوية 2" }
+        ]
+      },
+      "target_duration_s": 20,
+      "transition_out": "fade"
+    },
+    {
+      "id": "s4",
+      "type": "payoff",
+      "vo_text": "الخلاصة: الـ Promise دايمًا هيسبق الـ setTimeout حتى لو الاتنين جاهزين. لو الشرح ده فادك، اعمل متابعة عشان يوميًا في شرح جديد بالعربي.",
+      "on_screen_text": "Promise دايمًا الأول ⚡ تابعنا!",
+      "target_duration_s": 11,
+      "transition_out": "fade"
+    }
+  ]
+}
