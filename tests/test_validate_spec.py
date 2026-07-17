@@ -24,7 +24,7 @@ def test_first_scene_must_be_hook(spec):
 
 def test_long_code_line_fails(spec):
     code_scene = next(s for s in spec["scenes"] if s["type"] == "code")
-    code_scene["code"]["content"] += "\nconst veryLongName = doSomething(a, b, c, d);"
+    code_scene["code"]["content"] += "\nconst veryLongVariableName = doSomethingVerbose(aaa, bbb);"
     errors = validate_spec(spec)
     assert any("exceed" in e for e in errors)
 

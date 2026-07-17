@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($runs = Invoke-RestMethod \"https://api.github.com/repos/HussamKayed/arabic-coding-shorts/actions/runs\"; $run = $runs.workflow_runs[0]; \"run: $\\($run.name\\) #$\\($run.run_number\\) -> $\\($run.status\\)/$\\($run.conclusion\\)\"; $jobs = Invoke-RestMethod $run.jobs_url; foreach \\($j in $jobs.jobs\\) { \"JOB: $\\($j.name\\) -> $\\($j.conclusion\\)\"; foreach \\($s in $j.steps\\) { \"  step: $\\($s.name\\) -> $\\($s.conclusion\\)\" } })",
+      "PowerShell(git add -A)",
+      "PowerShell(git push origin main)"
+    ]
+  }
+}

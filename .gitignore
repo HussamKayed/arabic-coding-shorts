@@ -1,3 +1,6 @@
+# personal Obsidian vault living inside the repo folder — never publish
+arabic-coding-shorts/
+
 __pycache__/
 *.py[cod]
 .venv/
