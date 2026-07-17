@@ -18,7 +18,9 @@ from . import config
 from .topics import resolve_topic
 from .validate_spec import load_schema, validate_spec
 
-GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+# Text generation is available on the stable API. Avoid tying the production
+# workflow to v1beta, whose model availability can differ by API key/project.
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1/models/{model}:generateContent"
 MAX_VALIDATION_ATTEMPTS = 3
 MAX_HTTP_ATTEMPTS = 5
 
@@ -72,7 +74,19 @@ def call_gemini(prompt: str, *, api_key: str | None = None, model: str | None = 
             last_error = f"HTTP {resp.status_code}: {resp.text[:200]}"
             print(f"[script] transient Gemini error, retrying: {last_error}", file=sys.stderr)
             continue
-        resp.raise_for_status()
+        if not resp.ok:
+            # requests' default HTTPError only includes the URL/status. Gemini's
+            # JSON body contains the useful reason (unknown model, disabled API,
+            # key restriction, etc.), so preserve a safe excerpt in Actions logs.
+            try:
+                detail = (resp.json().get("error") or {}).get("message", "")
+            except (ValueError, AttributeError):
+                detail = resp.text
+            detail = " ".join(detail.split())[:500]
+            raise RuntimeError(
+                f"Gemini API HTTP {resp.status_code} for model {model!r}: "
+                f"{detail or 'no error detail returned'}"
+            )
         data = resp.json()
 
         candidates = data.get("candidates") or []

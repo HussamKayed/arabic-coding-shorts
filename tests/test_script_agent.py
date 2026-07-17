@@ -1,6 +1,8 @@
+from unittest.mock import Mock, patch
+
 import pytest
 
-from pipeline.script_agent import normalize_spec, parse_spec_text
+from pipeline.script_agent import call_gemini, normalize_spec, parse_spec_text
 
 
 def test_parses_raw_json():
@@ -26,3 +28,25 @@ def test_normalize_forces_untrusted_fields():
     assert normalized["spec_version"] == "1.0"
     assert normalized["metadata"]["ai_disclosure"] is True
     assert normalized["metadata"]["privacy_status"] == "private"
+
+
+@patch("pipeline.script_agent.requests.post")
+def test_gemini_uses_stable_api(mock_post):
+    response = Mock(status_code=200, ok=True)
+    response.json.return_value = {
+        "candidates": [{"content": {"parts": [{"text": "{}"}]}}]
+    }
+    mock_post.return_value = response
+
+    assert call_gemini("prompt", api_key="test-key") == "{}"
+    assert "/v1/models/gemini-2.5-flash:generateContent" in mock_post.call_args.args[0]
+
+
+@patch("pipeline.script_agent.requests.post")
+def test_gemini_error_includes_api_detail(mock_post):
+    response = Mock(status_code=404, ok=False, text="")
+    response.json.return_value = {"error": {"message": "model unavailable for this project"}}
+    mock_post.return_value = response
+
+    with pytest.raises(RuntimeError, match="model unavailable for this project"):
+        call_gemini("prompt", api_key="test-key")
