@@ -40,6 +40,8 @@ def test_gemini_uses_stable_api(mock_post):
 
     assert call_gemini("prompt", api_key="test-key") == "{}"
     assert "/v1/models/gemini-2.5-flash:generateContent" in mock_post.call_args.args[0]
+    generation_config = mock_post.call_args.kwargs["json"]["generationConfig"]
+    assert generation_config == {"temperature": 0.8, "maxOutputTokens": 16384}
 
 
 @patch("pipeline.script_agent.requests.post")

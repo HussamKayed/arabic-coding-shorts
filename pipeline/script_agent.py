@@ -48,12 +48,10 @@ def call_gemini(prompt: str, *, api_key: str | None = None, model: str | None = 
     generation_config: dict = {
         "temperature": temperature,
         "maxOutputTokens": 16384,
-        "responseMimeType": "application/json",
     }
-    if "2.5" in model:
-        # 2.5 models think by default; JSON generation doesn't need it and it
-        # burns free-tier tokens. thinkingConfig errors on non-2.5 models.
-        generation_config["thinkingConfig"] = {"thinkingBudget": 0}
+    # responseMimeType and thinkingConfig are not accepted by the stable v1
+    # GenerateContent endpoint for every API project. The prompt still requires
+    # raw JSON, and parse_spec_text + validate_spec enforce it locally.
 
     body = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
