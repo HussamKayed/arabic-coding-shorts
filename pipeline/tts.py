@@ -25,7 +25,11 @@ SYNTH_RETRIES = 3
 
 async def _synth_scene(text: str, voice: str, rate: str, pitch: str, out_path: Path) -> list[dict]:
     words: list[dict] = []
-    communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
+    # edge-tts 7.2 defaults to SentenceBoundary metadata. Captions require the
+    # per-word mode explicitly; otherwise audio succeeds but `words` stays empty.
+    communicate = edge_tts.Communicate(
+        text, voice, rate=rate, pitch=pitch, boundary="WordBoundary"
+    )
     with open(out_path, "wb") as f:
         async for chunk in communicate.stream():
             if chunk["type"] == "audio":
@@ -37,8 +41,12 @@ async def _synth_scene(text: str, voice: str, rate: str, pitch: str, out_path: P
                     "start_s": round(start_s, 3),
                     "end_s": round(start_s + chunk["duration"] / TICKS_PER_SECOND, 3),
                 })
-    if not words or not out_path.exists() or out_path.stat().st_size == 0:
-        raise RuntimeError("edge-tts produced no audio or no word events")
+    if not out_path.exists() or out_path.stat().st_size == 0:
+        raise RuntimeError("edge-tts produced no audio")
+    if not words:
+        raise RuntimeError(
+            f"edge-tts produced {out_path.stat().st_size} audio bytes but no word events"
+        )
     return words
 
 

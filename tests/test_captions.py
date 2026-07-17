@@ -1,4 +1,6 @@
-from pipeline.tts import group_captions
+import asyncio
+
+from pipeline.tts import _synth_scene, group_captions
 
 
 def words(seq):
@@ -29,3 +31,28 @@ def test_caption_timing_spans_group():
 
 def test_empty_words():
     assert group_captions([]) == []
+
+
+def test_synthesis_explicitly_requests_word_boundaries(monkeypatch, tmp_path):
+    captured = {}
+
+    class FakeCommunicate:
+        def __init__(self, text, voice, **kwargs):
+            captured.update(kwargs)
+
+        async def stream(self):
+            yield {"type": "audio", "data": b"mp3"}
+            yield {
+                "type": "WordBoundary",
+                "text": "مرحبا",
+                "offset": 0,
+                "duration": 1_000_000,
+            }
+
+    monkeypatch.setattr("pipeline.tts.edge_tts.Communicate", FakeCommunicate)
+    words_out = asyncio.run(
+        _synth_scene("مرحبا", "ar-EG-SalmaNeural", "+8%", "+0Hz", tmp_path / "voice.mp3")
+    )
+
+    assert captured["boundary"] == "WordBoundary"
+    assert words_out[0]["text"] == "مرحبا"
