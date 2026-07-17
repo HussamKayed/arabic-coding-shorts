@@ -22,7 +22,7 @@ def _load_dotenv() -> None:
 _load_dotenv()
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash")
 
 OUT_DIR = Path(os.environ.get("PIPELINE_OUT", ROOT / "out"))
 TOPICS_FILE = ROOT / "topics.yaml"
