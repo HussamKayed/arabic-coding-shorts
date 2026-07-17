@@ -34,7 +34,7 @@ You output ONE JSON object conforming EXACTLY to the JSON Schema at the bottom o
 
 # Voice
 
-Always use: "voice_id": "ar-EG-ShakirNeural", "rate": "+8%", "pitch": "+0Hz".
+Always use: "voice_id": "ar-EG-SalmaNeural", "rate": "+8%", "pitch": "+0Hz".
 
 # Metadata rules
 

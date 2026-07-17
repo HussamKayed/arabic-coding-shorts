@@ -10,7 +10,7 @@
     "target_duration_s": 62
   },
   "voice": {
-    "voice_id": "ar-EG-ShakirNeural",
+    "voice_id": "ar-EG-SalmaNeural",
     "rate": "+8%",
     "pitch": "+0Hz"
   },

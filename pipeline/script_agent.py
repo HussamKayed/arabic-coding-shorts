@@ -121,6 +121,11 @@ def normalize_spec(spec: dict, topic: dict) -> dict:
     spec["spec_version"] = "1.0"
     spec["topic_id"] = topic["id"]
     spec["language"] = "ar"
+    spec["voice"] = {
+        "voice_id": "ar-EG-SalmaNeural",
+        "rate": "+8%",
+        "pitch": "+0Hz",
+    }
     meta = spec.get("metadata")
     if isinstance(meta, dict):
         meta["ai_disclosure"] = True

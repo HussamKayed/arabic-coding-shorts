@@ -26,16 +26,9 @@
       "additionalProperties": false,
       "required": ["voice_id", "rate", "pitch"],
       "properties": {
-        "voice_id": {
-          "enum": [
-            "ar-EG-ShakirNeural",
-            "ar-EG-SalmaNeural",
-            "ar-SA-HamedNeural",
-            "ar-SA-ZariyahNeural"
-          ]
-        },
-        "rate": { "type": "string", "pattern": "^[+-]\\d{1,3}%$" },
-        "pitch": { "type": "string", "pattern": "^[+-]\\d{1,3}Hz$" }
+        "voice_id": { "const": "ar-EG-SalmaNeural" },
+        "rate": { "const": "+8%" },
+        "pitch": { "const": "+0Hz" }
       }
     },
     "metadata": {

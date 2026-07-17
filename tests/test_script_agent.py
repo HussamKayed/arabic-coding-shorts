@@ -21,11 +21,17 @@ def test_rejects_non_object():
 def test_normalize_forces_untrusted_fields():
     spec = {
         "topic_id": "whatever-the-llm-said",
+        "voice": {"voice_id": "ar-EG-ShakirNeural", "rate": "-50%", "pitch": "+20Hz"},
         "metadata": {"ai_disclosure": False, "privacy_status": "public"},
     }
     normalized = normalize_spec(spec, {"id": "real-topic"})
     assert normalized["topic_id"] == "real-topic"
     assert normalized["spec_version"] == "1.0"
+    assert normalized["voice"] == {
+        "voice_id": "ar-EG-SalmaNeural",
+        "rate": "+8%",
+        "pitch": "+0Hz",
+    }
     assert normalized["metadata"]["ai_disclosure"] is True
     assert normalized["metadata"]["privacy_status"] == "private"
 
